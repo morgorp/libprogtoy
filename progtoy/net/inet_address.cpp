@@ -1,3 +1,7 @@
+/*
+ * Copyright (C), 2017, progrom.
+ */
+
 #include "inet_address.h"
 
 namespace progtoy {
@@ -12,7 +16,7 @@ namespace progtoy {
 	{
 		struct hostent *ht = gethostbyname(host.c_str());
 		if(ht == nullptr) {
-			throw -1;
+			throw -1; // ToDo: 异常处理
 		}
 		vector<InetAddress> ret;
 		for(int i=0; ht->h_addr_list[i]!=nullptr; ++i) {
@@ -26,7 +30,7 @@ namespace progtoy {
 	{
 		struct hostent *ht = gethostbyname(host.c_str());
 		if(ht == nullptr) {
-			throw h_errno;
+			throw h_errno; // ToDo: 异常处理
 		}
 		struct in_addr nip = *(struct in_addr *)ht->h_addr;
 		return InetAddress(ht->h_name, inet_ntoa(nip));
@@ -36,11 +40,11 @@ namespace progtoy {
 	{
 		struct in_addr nip;
 		if(inet_aton(addr.c_str(), &nip) <= 0) {
-			throw -1;
+			throw -1; // ToDo: 异常处理
 		}
 		struct hostent *ht = gethostbyaddr(&nip, sizeof(nip), AF_INET);
 		if(ht == nullptr) {
-			throw -1;
+			throw -1; // ToDo: 异常处理
 		}
 		nip = *(struct in_addr *)ht->h_addr;
 		return InetAddress(ht->h_name, inet_ntoa(nip));
@@ -61,3 +65,4 @@ namespace progtoy {
 		return hostName;
 	}
 }
+
