@@ -13,8 +13,6 @@
 #include <string>
 #include <vector>
 
-extern int h_errno;
-
 namespace progtoy {
 	using std::string;
 	using std::vector;

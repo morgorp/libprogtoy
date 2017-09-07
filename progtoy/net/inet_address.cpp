@@ -14,40 +14,44 @@ namespace progtoy {
 	
 	vector<InetAddress> InetAddress::getAllByName(const string &host)
 	{
-		struct hostent *ht = gethostbyname(host.c_str());
-		if(ht == nullptr) {
-			throw -1; // ToDo: 异常处理
+		struct hostent htbuf;
+		char tmpbuf[1024];
+		struct hostent *ht;
+		int herrno;
+		if(gethostbyname_r(host.c_str(),
+				&htbuf, tmpbuf, sizeof(tmpbuf),
+				&ht, &herrno) || ht==nullptr) {
+			throw herrno; // ToDo: 异常处理
 		}
 		vector<InetAddress> ret;
 		for(int i=0; ht->h_addr_list[i]!=nullptr; ++i) {
-			struct in_addr nip = *reinterpret_cast<struct in_addr *>(ht->h_addr_list[i]);
-			ret.push_back(InetAddress(ht->h_name, inet_ntoa(nip)));
+			ret.push_back( InetAddress(ht->h_name, 
+				inet_ntop(AF_INET, ht->h_addr_list[i], tmpbuf, sizeof(tmpbuf))) );
 		}
 		return ret;
 	}
 
 	InetAddress InetAddress::getByName(const string &host)
 	{
-		struct hostent *ht = gethostbyname(host.c_str());
-		if(ht == nullptr) {
-			throw h_errno; // ToDo: 异常处理
-		}
-		struct in_addr nip = *reinterpret_cast<struct in_addr *>(ht->h_addr);
-		return InetAddress(ht->h_name, inet_ntoa(nip));
+		return getAllByName(host)[0];
 	}
 
 	InetAddress InetAddress::getByAddress(const string &addr)
 	{
 		struct in_addr nip;
-		if(inet_aton(addr.c_str(), &nip) <= 0) {
+		if(inet_pton(AF_INET, addr.c_str(), &nip) <= 0) {
 			throw -1; // ToDo: 异常处理
 		}
-		struct hostent *ht = gethostbyaddr(&nip, sizeof(nip), AF_INET);
-		if(ht == nullptr) {
-			throw -1; // ToDo: 异常处理
+		struct hostent htbuf;
+		char tmpbuf[1024];
+		struct hostent *ht;
+		int herrno;
+		if(gethostbyaddr_r(&nip, sizeof(nip), AF_INET,
+				&htbuf, tmpbuf, sizeof(tmpbuf),
+				&ht, &herrno) || ht == nullptr) {
+			throw herrno; // ToDo: 异常处理
 		}
-		nip = *reinterpret_cast<struct in_addr *>(ht->h_addr);
-		return InetAddress(ht->h_name, inet_ntoa(nip));
+		return InetAddress(ht->h_name, inet_ntop(AF_INET, ht->h_addr, tmpbuf, sizeof(tmpbuf)));
 	}
 
 	InetAddress InetAddress::getByAddress(const string &host, const string &addr)
