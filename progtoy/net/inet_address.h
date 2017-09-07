@@ -41,7 +41,7 @@ namespace progtoy {
 	private:
 		InetAddress() = default;
 		InetAddress(const string &, const string &);
-		InetAddress(char *&, char *&);
+		InetAddress(const char *&, const char *&);
 		
 		string hostName; /* 主机名 */
 		string hostAddress; /* 主机地址(IPv4) */
