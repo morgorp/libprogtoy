@@ -20,7 +20,7 @@ namespace progtoy {
 		}
 		vector<InetAddress> ret;
 		for(int i=0; ht->h_addr_list[i]!=nullptr; ++i) {
-			struct in_addr nip = *(struct in_addr *)ht->h_addr_list[i];
+			struct in_addr nip = *reinterpret_cast<struct in_addr *>(ht->h_addr_list[i]);
 			ret.push_back(InetAddress(ht->h_name, inet_ntoa(nip)));
 		}
 		return ret;
@@ -32,7 +32,7 @@ namespace progtoy {
 		if(ht == nullptr) {
 			throw h_errno; // ToDo: 异常处理
 		}
-		struct in_addr nip = *(struct in_addr *)ht->h_addr;
+		struct in_addr nip = *reinterpret_cast<struct in_addr *>(ht->h_addr);
 		return InetAddress(ht->h_name, inet_ntoa(nip));
 	}
 
@@ -46,7 +46,7 @@ namespace progtoy {
 		if(ht == nullptr) {
 			throw -1; // ToDo: 异常处理
 		}
-		nip = *(struct in_addr *)ht->h_addr;
+		nip = *reinterpret_cast<struct in_addr *>(ht->h_addr);
 		return InetAddress(ht->h_name, inet_ntoa(nip));
 	}
 
