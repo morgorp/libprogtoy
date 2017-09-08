@@ -21,8 +21,7 @@ namespace progtoy {
 		if(gethostbyname_r(host.c_str(),
 				&htbuf, tmpbuf, sizeof(tmpbuf),
 				&ht, &herrno) || ht==nullptr) {
-			printf("host: %s\n", hstrerror(herrno));
-			throw herrno; // ToDo: 异常处理
+			throw string(hstrerror(herrno)); // ToDo: 异常处理
 		}
 
 		vector<InetAddress> ret;
@@ -51,8 +50,7 @@ namespace progtoy {
 		if(gethostbyaddr_r(&nip, sizeof(nip), AF_INET,
 				&htbuf, tmpbuf, sizeof(tmpbuf),
 				&ht, &herrno) || ht == nullptr) {	
-			printf("host: %s\n", hstrerror(herrno));
-			throw herrno; // ToDo: 异常处理
+			throw string(hstrerror(herrno)); // ToDo: 异常处理
 		}
 		return InetAddress(ht->h_name, inet_ntop(AF_INET, ht->h_addr, tmpbuf, sizeof(tmpbuf)));
 	}
