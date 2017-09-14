@@ -9,7 +9,7 @@ namespace progtoy {
 	Socket::Socket()
 	{
 		closed = true;
-		sockfd = socket(AF_INET, SOCK_STREAM, 0);
+		sockfd = socket(PF_INET, SOCK_STREAM, 0);
 		if(sockfd < 0) {
 			throw string(strerror(errno)); // ToDo: 异常处理
 		}
