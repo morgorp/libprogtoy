@@ -27,7 +27,7 @@ namespace progtoy {
 		if(!isClosed()) {
 			throw string("Not closed."); // ToDo: 异常处理
 		}
-		struct sockaddr_in addrin;
+		struct sockaddr_in addrin = {0};
 		if(inet_aton(bindAddr.getHostAddress().c_str(), 
 				reinterpret_cast<in_addr*>(addrin.sin_addr.s_addr)) <= 0) {
 			::close(sockfd);

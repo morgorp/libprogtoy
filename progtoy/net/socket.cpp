@@ -43,7 +43,7 @@ namespace progtoy {
 			throw string(hstrerror(herrno)); // ToDo: 异常处理
 		}
 
-		struct sockaddr_in addrin;
+		struct sockaddr_in addrin = {0};
 		addrin.sin_family = AF_INET;
 		addrin.sin_addr.s_addr = *reinterpret_cast<in_addr_t *>(ht->h_addr);
 		addrin.sin_port = htons(port);
